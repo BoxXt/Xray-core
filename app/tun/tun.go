@@ -1,7 +1,5 @@
 package tun
 
-import "C"
-
 import (
 	"context"
 	"net/netip"
@@ -38,7 +36,7 @@ func init() {
 	}))
 }
 
-var _ features_tun.Interface = (*Tun)(nil)
+var TunInitializer features_tun.Interface = (*Tun)(nil)
 
 type Tun struct {
 	ctx                    context.Context
