@@ -17,7 +17,6 @@ import (
 	N "github.com/sagernet/sing/common/network"
 	"github.com/sagernet/sing/common/ranges"
 	"github.com/xtls/xray-core/common"
-	"github.com/xtls/xray-core/common/buf"
 	"github.com/xtls/xray-core/common/net"
 	"github.com/xtls/xray-core/common/session"
 	"github.com/xtls/xray-core/common/singbridge"
@@ -206,9 +205,10 @@ func (t *Tun) NewConnection(ctx context.Context, conn net.Conn, metadata M.Metad
 		Source: net.DestinationFromAddr(metadata.Source.TCPAddr()),
 		Conn:   conn,
 	})
+	wConn := singbridge.NewConn(conn)
 	_ = t.dispatcher.DispatchLink(ctx, singbridge.ToDestination(metadata.Destination, net.Network_TCP), &transport.Link{
-		Reader: buf.NewReader(conn),
-		Writer: buf.NewWriter(conn),
+		Reader: wConn,
+		Writer: wConn,
 	})
 	conn.Close()
 	return nil
